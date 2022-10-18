@@ -6,6 +6,7 @@ use App\Http\Requests\ClientRequest;
 use App\Models\Client;
 use App\Models\Service;
 use App\Orchid\Layouts\Client\ClientListTable;
+use App\Orchid\Layouts\CreateOrUpdateClient;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\DateTimer;
@@ -33,6 +34,8 @@ class ClientListScreen extends Screen
      * @var string|null
      */
     public $description = 'Список клиентов';
+
+    public $permission = 'platform.clients.';
 
     /**
      * Query data.
@@ -67,39 +70,9 @@ class ClientListScreen extends Screen
     {
         return [
             ClientListTable::class,
-            Layout::modal('createClient', Layout::rows([
-                Input::make('client.phone')->required()->title('Телефон')->mask('(999) 999-9999'),
-                Group::make([
-                    Input::make('client.name')->required()->title('Имя'),
-                    Input::make('client.last_name')->required()->title('Фамилия'),
-                ]),
-                Input::make('client.email')->type('email')->title('Email'),
-                DateTimer::make('client.birthday')->required()->format('Y-m-d')->title('День рождения'),
-                Relation::make('client.service_id')->fromModel(Service::class, 'name')
-                    ->title('Тип услуги')->required()
-            ]))->title('Создание клиента')->applyButton('Создать'),
+            Layout::modal('createClient', CreateOrUpdateClient::class)->title('Создание клиента')->applyButton('Создать'),
 
-            Layout::modal('editClient', Layout::rows([
-                Input::make('client.id')->type('hidden'),
-                Input::make('client.phone')->disabled()->required()->title('Телефон'),
-                Group::make([
-                    Input::make('client.name')->required()->placeholder('Имя клиента')->title('Имя'),
-                    Input::make('client.last_name')->required()->placeholder('Фамилия клиента')
-                        ->title('Фамилия')
-                ]),
-                Input::make('client.email')->type('email')->required()->title('Email'),
-                DateTimer::make('client.birthday')->format('Y-m-d')->title('День рождения')->required(),
-                Relation::make('client.service_id')->fromModel(Service::class, 'name')
-                    ->title('Тип услуги')
-                    ->required()
-                    ->help('Один из видов оказанных услуг'),
-                Select::make('client.assessment')->required()->options([
-                    'Отлично' => 'Отлично',
-                    'Хорошо' => 'Хорошо',
-                    'Удовлетворительно' => 'Удовлетворительно',
-                    'Отвратительно' => 'Отвратительно',
-                ])->help('Реакция на оказанную услугу')->empty('Не известно', 'Не известно')
-            ]))->async('asyncGetClient')
+            Layout::modal('editClient', CreateOrUpdateClient::class)->async('asyncGetClient')
         ];
     }
 

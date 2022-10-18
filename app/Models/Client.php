@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Orchid\Metrics\Chartable;
 use Propaganistas\LaravelPhone\PhoneNumber;
 use Illuminate\Database\Eloquent\Model;
 use Orchid\Filters\Filterable;
@@ -10,7 +11,7 @@ use Orchid\Screen\AsSource;
 
 class Client extends Model
 {
-    use HasFactory, AsSource, Filterable;
+    use HasFactory, AsSource, Filterable, Chartable;
 
     protected $table = 'clients';
     protected $guarded = false;

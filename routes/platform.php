@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Orchid\Screens\AnalyticsAndReportsScreen;
 use App\Orchid\Screens\Client\ClientListScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
@@ -36,7 +37,15 @@ Route::screen('/main', PlatformScreen::class)
 
 // Clients
 Route::screen('clients', ClientListScreen::class)
-    ->name('platform.clients');
+    ->name('platform.clients')->breadcrumbs(
+        fn (Trail $trail) => $trail->parent('platform.index')->push('Клиенты')
+    );
+
+// Analytics and Reports
+Route::screen('analytics-and-reports', AnalyticsAndReportsScreen::class)
+    ->name('platform.analyticsAndReports')->breadcrumbs(
+        fn (Trail $trail) => $trail->parent('platform.index')->push('Аналитика и отчёты')
+    );
 
 // Platform > Profile
 Route::screen('profile', UserProfileScreen::class)

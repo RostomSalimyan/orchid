@@ -2,6 +2,7 @@
 
 namespace App\Orchid;
 
+use Illuminate\Support\Facades\Auth;
 use Orchid\Platform\Dashboard;
 use Orchid\Platform\ItemPermission;
 use Orchid\Platform\OrchidServiceProvider;
@@ -29,7 +30,26 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make('Клиенты')
                 ->icon('user')
                 ->route('platform.clients')
-                ->title('Клиенты'),
+                ->title('Клиенты')
+                ->permission('platform.clients'),
+
+            Menu::make('Аналитика и отчёты')
+                ->icon('chart')
+                ->route('platform.analyticsAndReports')
+                ->canSee(Auth::user()
+                        ->hasAccess('platform.analytics') && Auth::user()
+                        ->hasAccess('platform.reports')),
+
+            Menu::make(__('Users'))
+                ->icon('user')
+                ->route('platform.systems.users')
+                ->permission('platform.systems.users')
+                ->title(__('Access rights')),
+
+            Menu::make(__('Roles'))
+                ->icon('lock')
+                ->route('platform.systems.roles')
+                ->permission('platform.systems.roles'),
         ];
     }
 
@@ -54,6 +74,10 @@ class PlatformProvider extends OrchidServiceProvider
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))
                 ->addPermission('platform.systems.users', __('Users')),
+            ItemPermission::group('Отзывы клиентов')
+                ->addPermission('platform.clients', 'Клиенты')
+                ->addPermission('platform.analytics', 'Аналитика')
+                ->addPermission('platform.reports', 'Отчёты'),
         ];
     }
 

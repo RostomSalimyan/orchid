@@ -30,6 +30,7 @@ class ClientRequest extends FormRequest
             'client.email' => ['required', 'email', 'unique:clients,email'],
             'client.birthday' => ['required', 'date_format:Y-m-d'],
             'client.service_id' => ['exists:services,id', 'required'],
+            'client.assessment' => ['required']
         ];
     }
 
